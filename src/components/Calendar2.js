@@ -50,7 +50,28 @@ class Calendar extends Component {
       .then((response) => response.json())
       .then((data) => {
         console.log("Success:", data);
+        this.updateCalendarWithData(data);
         this.fetchEvents(); // Fetch updated events after processing the command
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  }
+  updateCalendarWithData(data) {
+    const { title, start, end, desc } = data;
+    const newAppointment = { title, start, end, desc };
+
+    fetch("http://localhost:5000/api/events", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newAppointment),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Success:", data);
+        this.fetchEvents(); // Fetch updated events after adding a new one
       })
       .catch((error) => {
         console.error("Error:", error);
